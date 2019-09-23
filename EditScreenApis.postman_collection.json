@@ -1,0 +1,253 @@
+{
+	"info": {
+		"_postman_id": "912e950e-69b5-4de1-a283-5d3ae85aa878",
+		"name": "EditScreenApis",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "getPdfUrl",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "clientId",
+						"value": "10001",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://www.cratosys.com/invoiceapi/invoice/getdownloadurl?fileName=Invoice.pdf",
+					"protocol": "https",
+					"host": [
+						"www",
+						"cratosys",
+						"com"
+					],
+					"path": [
+						"invoiceapi",
+						"invoice",
+						"getdownloadurl"
+					],
+					"query": [
+						{
+							"key": "fileName",
+							"value": "Invoice.pdf"
+						},
+						{
+							"key": "clientid",
+							"value": "10001",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getEntityByClientId",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://www.cratosys.com/entityapi/10001",
+					"protocol": "https",
+					"host": [
+						"www",
+						"cratosys",
+						"com"
+					],
+					"path": [
+						"entityapi",
+						"10001"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getInvoiceByUrn",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d7507362-d675-4251-8755-2b0c20ec45fa",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://www.cratosys.com/invoiceapi/invoice/10001100155",
+					"protocol": "https",
+					"host": [
+						"www",
+						"cratosys",
+						"com"
+					],
+					"path": [
+						"invoiceapi",
+						"invoice",
+						"10001100155"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllVendors",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://www.cratosys.com/vendorapi/all?clientId=10001&entityid=E001",
+					"protocol": "https",
+					"host": [
+						"www",
+						"cratosys",
+						"com"
+					],
+					"path": [
+						"vendorapi",
+						"all"
+					],
+					"query": [
+						{
+							"key": "clientId",
+							"value": "10001"
+						},
+						{
+							"key": "entityid",
+							"value": "E001"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAccountCoding",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://www.cratosys.com/accountcodingapi?clientEntityId=E001&clientId=10001",
+					"protocol": "https",
+					"host": [
+						"www",
+						"cratosys",
+						"com"
+					],
+					"path": [
+						"accountcodingapi"
+					],
+					"query": [
+						{
+							"key": "clientEntityId",
+							"value": "E001"
+						},
+						{
+							"key": "clientId",
+							"value": "10001"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllInvoicesByClientId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d7507362-d675-4251-8755-2b0c20ec45fa",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://www.cratosys.com/invoiceapi/invoice/getall/10001?activeStatus=ACTIVE",
+					"protocol": "https",
+					"host": [
+						"www",
+						"cratosys",
+						"com"
+					],
+					"path": [
+						"invoiceapi",
+						"invoice",
+						"getall",
+						"10001"
+					],
+					"query": [
+						{
+							"key": "activeStatus",
+							"value": "ACTIVE"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getClientById",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://www.cratosys.com/clientapi/10001",
+					"protocol": "https",
+					"host": [
+						"www",
+						"cratosys",
+						"com"
+					],
+					"path": [
+						"clientapi",
+						"10001"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
