@@ -1,0 +1,36 @@
+{
+	"info": {
+		"_postman_id": "a1a0ce45-21ca-429b-a466-2ad5b0634cba",
+		"name": "GraphQL Reactive",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GraphQL",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query {\n    invoiceByUrn (urn : \"10001100155\") {\n        _id,\n        invoiceNumber\n    }\n    clientById (clientId: \"10001\") {\n        clientId, \n        clientCode\n    }\n    invoicesByClientId(clientId: \"10001\") {\n        _id,\n        invoiceNumber\n    }\n    entitiesByClientId(clientId: \"10001\") {\n        clientId,\n        address {\n            addressLine1,\n            addressLine2, \n            addressLine3, \n            addressLine4, \n            city,\n            state,\n            zipCode, \n            country\n        }\n    }\n    vendorsByClientAndEntityId(clientId: \"10001\", entityId: \"E001\") {\n        vendorName\n    }\n    downloadUrlByClientId(clientId: \"10001\") {\n        downloadURL\n    }\n}",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/graphql",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
