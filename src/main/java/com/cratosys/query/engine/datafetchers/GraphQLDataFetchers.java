@@ -1,9 +1,6 @@
 package com.cratosys.query.engine;
 
-import com.cratosys.data.model.Client;
-import com.cratosys.data.model.ClientEntity;
-import com.cratosys.data.model.Invoice;
-import com.cratosys.data.model.Vendor;
+import com.cratosys.data.model.*;
 import graphql.schema.DataFetcher;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
@@ -20,36 +17,36 @@ import java.util.concurrent.CompletableFuture;
 import static java.util.concurrent.CompletableFuture.supplyAsync;
 
 @Component
-public class GraphQLNonReactiveDataFetcher {
+public class GraphQLDataFetchers {
 
     private RestTemplate restTemplate;
 
-    public GraphQLNonReactiveDataFetcher(RestTemplateBuilder restTemplateBuilder) {
+    public GraphQLDataFetchers(RestTemplateBuilder restTemplateBuilder) {
         this.restTemplate = restTemplateBuilder.build();
     }
 
-    public DataFetcher<Invoice> getInvoiceByUrnFetcher() {
-        return dataFetchingEnvironment -> {
+    public DataFetcher<CompletableFuture<Invoice>> getInvoiceByUrnFetcher() {
+        return dataFetchingEnvironment -> supplyAsync(() -> {
             return restTemplate.getForObject(
                     "https://www.cratosys.com/invoiceapi/invoice/{urn}",
                     Invoice.class,
                     dataFetchingEnvironment.getArgument("urn").toString()
             );
-        };
+        });
     }
 
-    public DataFetcher<Client> getClientById() {
-        return dataFetchingEnvironment -> {
+    public DataFetcher<CompletableFuture<Client>> getClientById() {
+        return dataFetchingEnvironment -> supplyAsync(() -> {
             return restTemplate.getForObject(
                     "https://www.cratosys.com/clientapi/{clientId}",
                     Client.class,
                     dataFetchingEnvironment.getArgument("clientId").toString()
             );
-        };
+        });
     }
 
-    public DataFetcher<List<Invoice>> getInvoicesByClientId() {
-        return dataFetchingEnvironment -> {
+    public DataFetcher<CompletableFuture<List<Invoice>>> getInvoicesByClientId() {
+        return dataFetchingEnvironment -> supplyAsync(() -> {
             ResponseEntity<List<Invoice>> responseEntity = restTemplate.exchange(
                     "https://www.cratosys.com/invoiceapi/invoice/getall/{clientId}?activeStatus=ACTIVE",
                     HttpMethod.GET,
@@ -58,11 +55,11 @@ public class GraphQLNonReactiveDataFetcher {
                     },
                     dataFetchingEnvironment.getArgument("clientId").toString());
             return responseEntity.getBody();
-        };
+        });
     }
 
-    public DataFetcher<List<ClientEntity>> getEntitiesByClientId() {
-        return dataFetchingEnvironment -> {
+    public DataFetcher<CompletableFuture<List<ClientEntity>>> getEntitiesByClientId() {
+        return dataFetchingEnvironment -> supplyAsync(() -> {
             ResponseEntity<List<ClientEntity>> responseEntity = restTemplate.exchange(
                     "https://www.cratosys.com/entityapi/{clientId}",
                     HttpMethod.GET,
@@ -72,26 +69,26 @@ public class GraphQLNonReactiveDataFetcher {
                     dataFetchingEnvironment.getArgument("clientId").toString()
             );
             return responseEntity.getBody();
-        };
+        });
     }
 
-    public DataFetcher<List<Vendor>> getVendorsByClientIdAndEntityId() {
-        return dataFetchingEnvironment -> {
-            ResponseEntity<List<Vendor>> responseEntity = restTemplate.exchange(
+    public DataFetcher<CompletableFuture<List<ClientEntityVendor>>> getVendorsByClientIdAndEntityId() {
+        return dataFetchingEnvironment -> supplyAsync(() -> {
+            ResponseEntity<List<ClientEntityVendor>> responseEntity = restTemplate.exchange(
                     "https://www.cratosys.com/vendorapi/all?clientId={clientId}&entityid={entityId}",
                     HttpMethod.GET,
                     null,
-                    new ParameterizedTypeReference<List<Vendor>>() {
+                    new ParameterizedTypeReference<List<ClientEntityVendor>>() {
                     },
                     dataFetchingEnvironment.getArgument("clientId").toString(),
                     dataFetchingEnvironment.getArgument("entityId").toString()
             );
             return responseEntity.getBody();
-        };
+        });
     }
 
-    public DataFetcher<DownloadURL> getDownloadURLByClientId() {
-        return dataFetchingEnvironment ->  {
+    public DataFetcher<CompletableFuture<DownloadURL>> getDownloadURLByClientId() {
+        return dataFetchingEnvironment -> supplyAsync(() -> {
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.add("clientId", dataFetchingEnvironment.getArgument("clientId").toString());
             HttpEntity<String> entity = new HttpEntity<>("", httpHeaders);
@@ -101,6 +98,36 @@ public class GraphQLNonReactiveDataFetcher {
                     DownloadURL.class
             );
             return responseEntity.getBody();
-        };
+        });
     }
+
+    public DataFetcher<CompletableFuture<List<ClientAccountingSegment>>> getAccountCodingByClientAndEntityId() {
+        return dataFetchingEnvironment -> supplyAsync(() -> {
+            ResponseEntity<List<ClientAccountingSegment>> responseEntity = restTemplate.exchange(
+                    "https://www.cratosys.com/accountcodingapi?clientEntityId={entityId}&clientId={clientId}",
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<List<ClientAccountingSegment>>() {
+                    },
+                    dataFetchingEnvironment.getArgument("entityId").toString(),
+                    dataFetchingEnvironment.getArgument("clientId").toString()
+            );
+            return responseEntity.getBody();
+        });
+    }
+
+    public DataFetcher<CompletableFuture<List<Terms>>> getTermsByClientId() {
+        return dataFetchingEnvironment -> supplyAsync(() -> {
+            ResponseEntity<List<Terms>> responseEntity = restTemplate.exchange(
+                    "https://www.cratosys.com/clientapi/{clientId}/terms",
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<List<Terms>>() {
+                    },
+                    dataFetchingEnvironment.getArgument("clientId").toString()
+            );
+            return responseEntity.getBody();
+        });
+    }
+
 }

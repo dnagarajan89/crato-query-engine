@@ -1,9 +1,6 @@
 package com.cratosys.query.engine;
 
-import com.cratosys.data.model.Client;
-import com.cratosys.data.model.ClientEntity;
-import com.cratosys.data.model.Invoice;
-import com.cratosys.data.model.Vendor;
+import com.cratosys.data.model.*;
 import graphql.schema.DataFetcher;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -75,7 +72,7 @@ public class GraphQLReactiveDataFetcher {
         };
     }
 
-    public DataFetcher<CompletableFuture<List<Vendor>>> getVendorsByClientIdAndEntityId() {
+    public DataFetcher<CompletableFuture<List<ClientEntityVendor>>> getVendorsByClientIdAndEntityId() {
         return dataFetchingEnvironment -> {
             return webClient
                     .get()
@@ -84,7 +81,7 @@ public class GraphQLReactiveDataFetcher {
                             dataFetchingEnvironment.getArgument("entityId").toString()
                     )
                     .retrieve()
-                    .bodyToFlux(Vendor.class)
+                    .bodyToFlux(ClientEntityVendor.class)
                     .collectList()
                     .toFuture();
         };
@@ -98,6 +95,36 @@ public class GraphQLReactiveDataFetcher {
                     .header("clientId",  dataFetchingEnvironment.getArgument("clientId").toString())
                     .retrieve()
                     .bodyToMono(DownloadURL.class)
+                    .toFuture();
+        };
+    }
+
+
+    public DataFetcher<CompletableFuture<List<ClientAccountingSegment>>> getAccountCodingByClientAndEntityId() {
+        return dataFetchingEnvironment -> {
+            return webClient
+                    .get()
+                    .uri("/accountcodingapi?clientEntityId={entityId}&clientId={clientId}",
+                            dataFetchingEnvironment.getArgument("entityId").toString(),
+                            dataFetchingEnvironment.getArgument("clientId").toString()
+                    )
+                    .retrieve()
+                    .bodyToFlux(ClientAccountingSegment.class)
+                    .collectList()
+                    .toFuture();
+        };
+    }
+
+    public DataFetcher<CompletableFuture<List<Terms>>> getTermsByClientId() {
+        return dataFetchingEnvironment -> {
+            return webClient
+                    .get()
+                    .uri("/clientapi/{clientId}/terms",
+                            dataFetchingEnvironment.getArgument("clientId").toString()
+                    )
+                    .retrieve()
+                    .bodyToFlux(Terms.class)
+                    .collectList()
                     .toFuture();
         };
     }
